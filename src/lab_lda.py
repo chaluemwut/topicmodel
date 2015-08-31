@@ -43,10 +43,60 @@ def gensim():
     
     from pprint import pprint  # pretty-printer
     pprint(texts)
+#     texts = ["a b c".split(), "a a b".split()]
     dictionary = corpora.Dictionary(texts)
-    dictionary.save('/tmp/deerwester.dict') # store the dictionary, for future reference
-    print(dictionary)
-    print(dictionary.token2id)
+    corpus = [dictionary.doc2bow(text) for text in texts]
+    model = models.TfidfModel(corpus, id2word=dictionary)
+#     model = models.LsiModel(corpus, id2word=dictionary, num_topics=3)
+    
+    doc = "Human computer system"
+    vec_bow = dictionary.doc2bow(doc.lower().split())
+#     print vec_bow
+    vec_space = model[vec_bow]
+#     print vec_space
+    index = similarities.MatrixSimilarity(model[corpus])
+    sims = index[vec_space]
+    print list(enumerate(sims))
+    
+#     print index
+#     print vec_space
+#     print vec_bow
+#     vec_bow = dictionary.doc2bow(doc.lower().split())
+#     vec_lsi = lsi[vec_bow]
+#     index = similarities.MatrixSimilarity(lsi[corpus])
+#     sim = index[lsi[vec_lsi]]
+#     print sim
+#     print vec_lsi
+    
+#     index = similarities.MatrixSimilarity(lsi[corpus])
+#     print list(enumerate(index))
+    
+#     print lsi
+#     print corpus
+#     print dictionary
+#     lsi = models.LsiModel()
+#     print corpus
+#     tfidf = models.TfidfModel(corpus)
+#     corpus_tfidf = tfidf[corpus]
+#     for doc in corpus_tfidf:
+#         print doc
+    
+#     pprint(tfidf)
+#     
+#     test1 = "eps trees time"
+#     print test1.split()
+#     print dictionary.token2id
+#     
+#     test_word = dictionary.doc2bow(test1.split())
+#     print test_word
+#     
+#     print tfidf[test_word]
+    #print test_word
+    #print tfidf
+    #print corpus
+    #dictionary.save('/tmp/deerwester.dict') # store the dictionary, for future reference
+    #print(dictionary)
+    #print(dictionary.token2id)
             
 if __name__ == '__main__':
     gensim()
