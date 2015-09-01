@@ -1,4 +1,6 @@
 from nlp import CRFWordSegment
+from gensim import corpora
+import printutil, pickle
 
 class Loader(object):
 
@@ -27,19 +29,39 @@ class PreProcessing(object):
         lst = self.remove_dup_sentense(word_list)
         crf = CRFWordSegment()
         for l in lst:
-            ret.append(crf.crfpp(unicode(l,'utf8'))[0])
+            try:
+                ret.append(' '.join(crf.crfpp(unicode(l,'utf8'))))
+            except Exception as e:
+                pass
         return ret
 
 if __name__ == '__main__':
+
     obj = Loader()
-    words = obj.get_list('filter.txt')
-     
-    preProcess = PreProcessing()
-    lst = preProcess.process(words)
-    for l in lst:
-        for ll in l:
-            print ll
-        print '************'    
+    words = obj.get_list('data/agree_filter.txt')
+    pickle.dump(words, open('data/obj/agree_filter.obj', 'wb'))
+    
+#       
+#     preProcess = PreProcessing()
+#     lst = preProcess.process(words)
+#     pickle.dump(lst, open('data/obj/agree_filter.obj','wb'))
+    
+#     lst = [[l1 for l1 in l.split()] for l in lst]
+#     print lst
+#     print lst
+#     printutil.printUtilL1(lst)
+#     filter_dict = corpora.Dictionary(lst)
+#     filter_dict.save('data/obj/filter.obj')
+#     import pickle
+#     obj = pickle.load(open('data/obj/filter.obj','rb'))
+#     print obj
+#     corpus = corpora.MmCorpus('data/obj/filter.obj')
+#     print corpus
+    
+#     for l in lst:
+#         for ll in l:
+#             print ll
+#         print '************'    
 #     print ret[0][0], ret[0][1]
 #     word_pro = preProcess.remove_dup_sentense(words)
 #     for x in word_pro:

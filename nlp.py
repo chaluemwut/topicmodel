@@ -45,4 +45,4 @@ class CRFWordSegment(object):
             b = lst_ans[i+1]
             result_lst.append(str_ans[a:b])
         result_lst.append(str_ans[b:len(str_ans)])
-        return result_lst, char_lst
+        return result_lst
