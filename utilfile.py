@@ -42,11 +42,13 @@ class FileUtil:
     def write_newfile(self, file_name, message):
            self.template_write_file(file_name, message, 'w')
     
-    def read_noencode(self, filename):
+    @staticmethod
+    def read_noencode(filename):
         f = open(filename)
         lines = f.readlines()
+        en_lines = [x for x in lines]
         f.close()
-        return lines
+        return en_lines
 
     def read_result(self, path):
         str = self.read_file_one_line(path)
@@ -57,10 +59,11 @@ class FileUtil:
         msg = f.read()
         f.close()
         return msg
-         
-    def read_file(self, file_name):
+    
+    @staticmethod    
+    def read_file(file_name):
         with codecs.open(file_name, 'r', 'utf-8') as file:
-            return file.readlines()
+            return unicode(file.readlines(), 'utf-8')
         return []
     
     def template_write_file(self, file_name, message, option):

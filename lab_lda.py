@@ -1,6 +1,7 @@
 import numpy as np
 import lda
 import lda.datasets
+from utilfile import FileUtil
 
 def lda_test():
     X = lda.datasets.load_reuters()
@@ -16,18 +17,18 @@ def lda_test():
         topic_words = np.array(vocab)[np.argsort(topic_dist)][:-n_top_words:-1]
         print('Topic {}: {}'.format(i, ' '.join(topic_words)))
 
+def load_gof_data():
+    from pre_processing import Loader, PreProcessing
+    loader = Loader()
+    word_lst = loader.get_list('data/testdatatxt.txt')
+    pre_process = PreProcessing()
+    lst = pre_process.process2(word_lst)
+    return lst 
+   
 # http://radimrehurek.com/gensim/tut1.html
 def gensim():
     from gensim import corpora, models, similarities
-    documents = ["Human machine interface for lab abc computer applications",
-                 "A survey of user opinion of computer system response time",
-                 "The EPS user interface management system",
-                 "System and human system engineering testing of EPS",
-                 "Relation of user perceived response time to error measurement",
-                 "The generation of random binary unordered trees",
-                 "The intersection graph of paths in trees",
-                 "Graph minors IV Widths of trees and well quasi ordering",
-                 "Graph minors A survey"]
+    documents = load_gof_data()
     stoplist = set('for a of the and to in'.split())
     texts = [[word for word in document.lower().split() if word not in stoplist]
              for document in documents]
@@ -41,22 +42,27 @@ def gensim():
     texts = [[token for token in text if frequency[token] > 1]
              for text in texts]
     
+    #print texts
+    
     from pprint import pprint  # pretty-printer
-    pprint(texts)
+    #pprint(texts)
 #     texts = ["a b c".split(), "a a b".split()]
+        
     dictionary = corpora.Dictionary(texts)
     corpus = [dictionary.doc2bow(text) for text in texts]
-    model = models.TfidfModel(corpus, id2word=dictionary)
+    #print corpus
+#     model = models.TfidfModel(corpus, id2word=dictionary)
+    model = models.LdaModel(corpus, num_topics=50)
 #     model = models.LsiModel(corpus, id2word=dictionary, num_topics=3)
     
-    doc = "Human computer system"
+    doc = 'report data'
     vec_bow = dictionary.doc2bow(doc.lower().split())
 #     print vec_bow
     vec_space = model[vec_bow]
-#     print vec_space
-    index = similarities.MatrixSimilarity(model[corpus])
-    sims = index[vec_space]
-    print list(enumerate(sims))
+    print 'vector ', vec_space
+#     index = similarities.MatrixSimilarity(model[corpus])
+#     sims = index[vec_space]
+#     print list(enumerate(sims))
     
 #     print index
 #     print vec_space
